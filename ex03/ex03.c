@@ -18,7 +18,26 @@
 
 int main(int argc, char *argv[])
 {
-    /* Scrieti solutia aici */
+    struct ffblk ff;
+    char cale[260];
+    int nr = 0;
+
+    if (argc != 2)
+        return 1;
+
+    if (findfirst(argv[1], &ff, FA_ARCH | FA_HIDDEN | FA_RDONLY | FA_SYSTEM) == 0)
+    {
+        do
+        {
+            if (!(ff.ff_attrib & FA_DIREC))
+            {
+                nr++;
+                printf("%s%s\n", getcwd(cale, 260), ff.ff_name);
+            }
+        } while (findnext(&ff) == 0);
+    }
+
+    printf("Numar fisiere: %d\n", nr);
 
     return 0;
 }
