@@ -16,7 +16,53 @@
 
 int main(int argc, char *argv[])
 {
-    /* Scrieti solutia aici */
+    FILE *f;
+    int c, anterior, schimbat;
+    long poz;
+
+    if (argc != 2)
+        return 1;
+
+    f = fopen(argv[1], "r+b");
+
+    if (f == NULL)
+        return 1;
+
+    fseek(f, 0, SEEK_END);
+    poz = ftell(f);
+
+    do
+    {
+        schimbat = 0;
+        fseek(f, 0, SEEK_SET);
+
+        anterior = fgetc(f);
+
+        while ((c = fgetc(f)) != EOF)
+        {
+            if (anterior > c)
+            {
+                poz = ftell(f);
+
+                fseek(f, -2, SEEK_CUR);
+                fputc(c, f);
+                fputc(anterior, f);
+
+                fseek(f, poz, SEEK_SET);
+                schimbat = 1;
+            }
+
+            anterior = fgetc(f);
+
+            if (anterior == EOF)
+                break;
+
+            fseek(f, -1, SEEK_CUR);
+        }
+
+    } while (schimbat);
+
+    fclose(f);
 
     return 0;
 }
