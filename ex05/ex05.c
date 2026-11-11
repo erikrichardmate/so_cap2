@@ -20,7 +20,45 @@
 
 int main(int argc, char *argv[])
 {
-    /* Scrieti solutia aici */
+    FILE *f;
+    char buffer[1024];
+    int c;
+
+    if (argc != 2)
+        return 1;
+
+    f = fopen(argv[1], "r+b");
+
+    if (f == NULL)
+        return 1;
+
+    fseek(f, 0, SEEK_END);
+
+    fseek(f, -1, SEEK_END);
+
+    while (ftell(f) >= 0)
+    {
+        c = fgetc(f);
+
+        if (c == EOF)
+            break;
+
+        if (c == '0')
+            break;
+
+        if (ftell(f) == 0)
+            break;
+
+        fseek(f, -2, SEEK_CUR);
+    }
+
+    fseek(f, 0, SEEK_END);
+
+    strcpy(buffer, "k123612");
+
+    fwrite(buffer, 1, strlen(buffer), f);
+
+    fclose(f);
 
     return 0;
 }
